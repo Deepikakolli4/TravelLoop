@@ -18,6 +18,10 @@ const menuOptions = [
     {
         name: 'Contact us',
         path:  '/contact-us'
+    },
+    {
+        name:"Booking",
+        path: '/booking'
     }
 ]
 const Header = () => {

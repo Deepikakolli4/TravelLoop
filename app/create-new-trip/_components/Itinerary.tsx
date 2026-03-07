@@ -1,274 +1,389 @@
-import React, { Activity } from 'react'
-import { Timeline } from "@/components/ui/timeline";
-import HotelCardItem from './HotelCardItem';
-import PlaceCardItem from './PlaceCardItem';
-const TRIP_DATA = {
-  budget: "Moderate",
-  destination: "Hyderabad",
-  duration: "6 Days",
-  group_size: "Family 3-5 People",
-  hotels: [
-    {
-      description:
-        "Luxury hotel with modern amenities, close to major temples and city center",
-      geo_coordinates: {
-        latitude: 17.412299,
-        longitude: 78.471092,
-      },
-      hotel_address:
-        "Tank Bund Road, Near Hussain Sagar Lake, Hyderabad, Telangana 500080",
-      hotel_image_url:
-        "https://example.com/marriott-hyderabad.jpg",
-      hotel_name: "Hotel Marriott Hyderabad",
-      price_per_night: "₹4,500-₹6,000",
-      rating: 4.5,
-    },
-    {
-      description:
-        "Premium hotel known for excellent service and central location",
-      geo_coordinates: {
-        latitude: 17.425793,
-        longitude: 78.444878,
-      },
-      hotel_address:
-        "Road No 1, Banjara Hills, Hyderabad, Telangana 500034",
-      hotel_image_url:
-        "https://example.com/taj-krishna.jpg",
-      hotel_name: "Taj Krishna Hyderabad",
-      price_per_night: "₹5,000-₹7,000",
-      rating: 4.7,
-    },
-    {
-      description:
-        "Modern hotel with family-friendly facilities",
-      geo_coordinates: {
-        latitude: 17.455896,
-        longitude: 78.364543,
-      },
-      hotel_address:
-        "Near HITEC City, Kondapur, Hyderabad, Telangana 500081",
-      hotel_image_url:
-        "https://example.com/novotel-hyderabad.jpg",
-      hotel_name: "Hotel Novotel Hyderabad",
-      price_per_night: "₹3,500-₹5,000",
-      rating: 4.3,
-    },
-  ],
-  itinerary: [
-    {
-      activities: [
-        {
-          best_time_to_visit:
-            "Morning 8 AM - 11 AM or Evening 4 PM - 7 PM",
-          geo_coordinates: {
-            latitude: 17.406187,
-            longitude: 78.469137,
-          },
-          place_address:
-            "Adarsh Nagar, Hyderabad, Telangana 500063",
-          place_details:
-            "Beautiful white marble temple dedicated to Lord Venkateswara, situated on Naubat Pahad hill",
-          place_image_url:
-            "https://example.com/birla-mandir.jpg",
-          place_name: "Birla Mandir (Venkateswara Temple)",
-          ticket_pricing: "Free Entry",
-          time_travel_each_location: "2-3 hours",
-        },
-      ],
-      best_time_to_visit_day: "Morning 8 AM - 11 AM",
-      day: 1,
-      day_plan: "Arrival and Birla Mandir",
-    },
-    {
-      activities: [
-        {
-          best_time_to_visit: "Early morning 6 AM - 11 AM",
-          geo_coordinates: {
-            latitude: 17.286282,
-            longitude: 78.333456,
-          },
-          place_address:
-            "Chilkur Village, Moinabad Mandal, Hyderabad, Telangana 500075",
-          place_details:
-            "Famous temple located 25km from Hyderabad, known for wish fulfillment and unique customs",
-          place_image_url:
-            "https://example.com/chilkur-balaji.jpg",
-          place_name: "Chilkur Balaji Temple (Visa Balaji)",
-          ticket_pricing: "Free Entry",
-          time_travel_each_location:
-            "6-7 hours including travel",
-        },
-      ],
-      best_time_to_visit_day: "Morning 6 AM - 11 AM",
-      day: 2,
-      day_plan: "Chilkur Balaji Temple",
-    },
-    {
-      activities: [
-        {
-          best_time_to_visit:
-            "Morning 7 AM - 12 PM or Evening 5 PM - 8 PM",
-          geo_coordinates: {
-            latitude: 17.412345,
-            longitude: 78.478901,
-          },
-          place_address:
-            "Banjara Hills, Road No 12, Hyderabad, Telangana 500034",
-          place_details:
-            "Replica of Puri Jagannath Temple, known for Rath Yatra celebrations",
-          place_image_url:
-            "https://example.com/jagannath-temple.jpg",
-          place_name: "Jagannath Temple",
-          ticket_pricing: "Free Entry",
-          time_travel_each_location: "2-3 hours",
-        },
-        {
-          best_time_to_visit:
-            "Morning 7 AM - 11 AM or Evening 5 PM - 9 PM",
-          geo_coordinates: {
-            latitude: 17.438921,
-            longitude: 78.445612,
-          },
-          place_address:
-            "Jubilee Hills, Hyderabad, Telangana 500033",
-          place_details:
-            "Beautiful temple dedicated to Shirdi Sai Baba",
-          place_image_url:
-            "https://example.com/sai-baba-temple.jpg",
-          place_name: "Sai Baba Temple",
-          ticket_pricing: "Free Entry",
-          time_travel_each_location: "1-2 hours",
-        },
-      ],
-      best_time_to_visit_day: "Morning 7 AM - 12 PM",
-      day: 3,
-      day_plan:
-        "Jagannath Temple and local spiritual sites",
-    },
-    {
-      activities: [
-        {
-          best_time_to_visit: "Early morning 5 AM - 1 PM",
-          geo_coordinates: {
-            latitude: 17.585345,
-            longitude: 78.943456,
-          },
-          place_address:
-            "Yadagirigutta, Nalgonda District, Telangana 508115",
-          place_details:
-            "Famous cave temple dedicated to Lord Narasimha, known for healing powers",
-          place_image_url:
-            "https://example.com/yadagirigutta-temple.jpg",
-          place_name:
-            "Sri Lakshmi Narasimha Temple, Yadagirigutta",
-          ticket_pricing:
-            "Free Entry (Special Darshan ₹50-₹100)",
-          time_travel_each_location:
-            "Full day excursion (6-8 hours)",
-        },
-      ],
-      best_time_to_visit_day: "Early Morning 5 AM - 1 PM",
-      day: 4,
-      day_plan: "Yadagirigutta Temple",
-    },
-    {
-      activities: [
-        {
-          best_time_to_visit:
-            "Morning 8 AM - 12 PM (Non-prayer times for visitors)",
-          geo_coordinates: {
-            latitude: 17.361633,
-            longitude: 78.474066,
-          },
-          place_address:
-            "Ghansi Bazaar, Hyderabad, Telangana 500002",
-          place_details:
-            "One of the oldest and largest mosques in South India, built with soil from Mecca",
-          place_image_url:
-            "https://example.com/macca-masjid.jpg",
-          place_name: "Macca Masjid (Mecca Masjid)",
-          ticket_pricing: "Free Entry",
-          time_travel_each_location: "1-2 hours",
-        },
-        {
-          best_time_to_visit: "Morning 9 AM - 11 AM",
-          geo_coordinates: {
-            latitude: 17.358937,
-            longitude: 78.471645,
-          },
-          place_address:
-            "Pathar Gatti, Hyderabad, Telangana 500002",
-          place_details:
-            "Historic mosque near Charminar with beautiful architecture",
-          place_image_url:
-            "https://example.com/jama-masjid.jpg",
-          place_name: "Jama Masjid Hyderabad",
-          ticket_pricing: "Free Entry",
-          time_travel_each_location: "1 hour",
-        },
-      ],
-      best_time_to_visit_day: "Morning 8 AM - 12 PM",
-      day: 5,
-      day_plan: "Macca Masjid and nearby spiritual sites",
-    },
-    {
-      activities: [
-        {
-          best_time_to_visit:
-            "Morning 7 AM - 11 AM or Evening 5 PM - 8 PM",
-          geo_coordinates: {
-            latitude: 17.423456,
-            longitude: 78.456789,
-          },
-          place_address:
-            "Nampally, Hyderabad, Telangana 500001",
-          place_details:
-            "Beautiful temple dedicated to Lord Krishna, known for spiritual atmosphere and bhajans",
-          place_image_url:
-            "https://example.com/iskcon-hyderabad.jpg",
-          place_name: "ISKCON Temple Hyderabad",
-          ticket_pricing: "Free Entry",
-          time_travel_each_location: "2-3 hours",
-        },
-      ],
-      best_time_to_visit_day: "Morning 7 AM - 11 AM",
-      day: 6,
-      day_plan: "ISKCON Temple and departure",
-    },
-  ],
-  origin: "Vizag (Visakhapatnam)",
-}
-const Itinerary = () => {
-  const data = [
-    {
-      title: "Recommended Hotels",
-      content: (
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          {TRIP_DATA?.hotels.map((hotel,index) => (
-           <HotelCardItem hotel={hotel}/>
-          ))}
+"use client";
+
+import React from "react";
+import { useTripDetail } from "@/app/provider";
+
+/* ============================= */
+/* COMPONENT */
+/* ============================= */
+const ActivityCard = ({ activity }: any) => {
+  const [imageError, setImageError] = React.useState(false);
+
+  return (
+    <a
+      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        activity.place_name
+      )}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+        <div className="w-full h-44 bg-gray-200 flex items-center justify-center overflow-hidden">
+          {!imageError ? (
+            <img
+              src={activity.place_image_url || "https://via.placeholder.com/400x300?text=Place"}
+              onError={() => setImageError(true)}
+              className="w-full h-full object-cover"
+              alt={activity.place_name}
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-center p-4">
+              <span className="text-sm font-semibold">{activity.place_name}</span>
+            </div>
+          )}
         </div>
-      ),
-    },
-    ...TRIP_DATA?.itinerary.map((dayData) =>({
-      title: `Day ${dayData?.day}`,
-      content:(
-        <div>
-          <p>Best Time :{dayData?.best_time_to_visit_day}</p>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-           {dayData?.activities.map((activity,index)=>(
-           <PlaceCardItem activity={activity}/>
-           ))}
+
+        <div className="p-4 space-y-2">
+          <h3 className="font-semibold text-lg">
+            {activity.place_name}
+          </h3>
+
+          <p className="text-sm text-gray-500">
+            {activity.place_address}
+          </p>
+
+          <p className="text-sm">
+            {activity.place_details}
+          </p>
+
+          <p className="text-sm">
+            🎫 {activity.ticket_pricing}
+          </p>
+        </div>
+      </div>
+    </a>
+  );
+};
+const Itinerary = () => {
+
+  const { tripDetailInfo } = useTripDetail();
+
+  const EmptyPlaceholder = ({ when }: { when: string }) => {
+    // always show three sample hostels with images for the selected time slot
+    const suggestions: Record<
+      string,
+      { name: string; image: string }[]
+    > = {
+      morning: [
+        {
+          name: "Sunrise Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,sunrise",
+        },
+        {
+          name: "Central Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,city",
+        },
+        {
+          name: "Garden Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,garden",
+        },
+      ],
+      afternoon: [
+        {
+          name: "Riverside Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,river",
+        },
+        {
+          name: "Market Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,market",
+        },
+        {
+          name: "Historic Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,historic",
+        },
+      ],
+      evening: [
+        {
+          name: "Sunset Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,sunset",
+        },
+        {
+          name: "Nightlife Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,night",
+        },
+        {
+          name: "Skyline Hostel",
+          image: "https://source.unsplash.com/400x300/?hostel,skyline",
+        },
+      ],
+    };
+
+    const items = suggestions[when.toLowerCase()] || [];
+
+    return (
+      <div className="py-8 bg-white rounded-lg border border-dashed border-gray-300">
+        {items.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {items.map((item, idx) => (
+              <a
+                key={idx}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <div
+                  className="bg-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-32 object-cover"
+                  />
+                  <div className="p-2 text-sm font-medium text-gray-700">
+                    {item.name}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+
+  // Loading / Empty state
+  if (!tripDetailInfo) {
+    return (
+      <div className="flex items-center justify-center h-[83vh] text-gray-400 text-lg">
+        Generate a trip to see itinerary ✨
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 space-y-10 h-[83vh] overflow-auto bg-gray-50">
+
+      {/* ================= HEADER ================= */}
+
+      <div className="bg-white rounded-xl shadow p-6">
+        <h1 className="text-2xl font-bold">
+          Explore {tripDetailInfo.destination || "Destination"}
+        </h1>
+
+        <p className="text-gray-500 mt-1">
+          {tripDetailInfo.duration || ""} • {tripDetailInfo.budget || ""}
+        </p>
+      </div>
+
+
+      {/* ================= HOTELS ================= */}
+
+      <div>
+
+        <h2 className="text-xl font-semibold mb-4">
+          🏨 Best Hotels
+        </h2>
+
+        {tripDetailInfo?.hotels?.length > 0 ? (
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {tripDetailInfo.hotels.map((hotel:any, index:number) => {
+              const [hotelImgError, setHotelImgError] = React.useState(false);
+              return (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
+              >
+
+                <div className="w-full h-44 bg-gray-200 flex items-center justify-center overflow-hidden">
+                  {!hotelImgError ? (
+                    <img
+                      src={hotel.hotel_image_url || "https://via.placeholder.com/400x300?text=Hotel"}
+                      onError={() => setHotelImgError(true)}
+                      className="w-full h-full object-cover"
+                      alt={hotel.hotel_name}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-center p-4">
+                      <span className="text-sm font-semibold">{hotel.hotel_name}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-4 space-y-2">
+
+                  <h3 className="font-semibold text-lg">
+                    {hotel.hotel_name}
+                  </h3>
+
+                  <p className="text-sm text-gray-500">
+                    {hotel.hotel_address}
+                  </p>
+
+                  <div className="flex justify-between text-sm">
+                    <span className="text-green-600">
+                      💰 {hotel.price_per_night}
+                    </span>
+
+                    <span className="text-yellow-500">
+                      ⭐ {hotel.rating}
+                    </span>
+                  </div>
+
+                </div>
+
+              </div>
+              );
+            })}
+
+          </div>
+
+        ) : (
+
+          <p className="text-gray-400">No hotels available</p>
+
+        )}
+
+      </div>
+      {/* ================= FOODS ================= */}
+
+{tripDetailInfo?.foods?.length > 0 && (
+  <div>
+    <h2 className="text-xl font-semibold mb-4">
+      🍴 Best Foods to Try
+    </h2>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {tripDetailInfo.foods.map((food:any, index:number) => {
+        const [foodImgError, setFoodImgError] = React.useState(false);
+        return (
+        <div key={index} className="bg-white rounded-xl shadow overflow-hidden">
+          <div className="w-full h-40 bg-gray-200 flex items-center justify-center overflow-hidden">
+            {!foodImgError ? (
+              <img
+                src={food.food_image_url || "https://via.placeholder.com/400x300?text=Food"}
+                onError={() => setFoodImgError(true)}
+                className="w-full h-full object-cover"
+                alt={food.food_name}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-center p-4">
+                <span className="text-sm font-semibold">{food.food_name}</span>
+              </div>
+            )}
+          </div>
+          <div className="p-4">
+            <h3 className="font-semibold">{food.food_name}</h3>
+            <p className="text-sm text-gray-500">
+              {food.food_description}
+            </p>
           </div>
         </div>
-      )
-    }))
-  ];
-  return (
-    <div className="relative w-full h-[83vh] overflow-auto">
-      <Timeline data={data} tripData={TRIP_DATA}/>
+        );
+      })}
+    </div>
+  </div>
+)}
+
+      {/* ================= DAY WISE ITINERARY ================= */}
+
+
+{tripDetailInfo?.itinerary ? (
+
+  (Array.isArray(tripDetailInfo.itinerary)
+    ? tripDetailInfo.itinerary
+    : Object.values(tripDetailInfo.itinerary)
+  ).map((day: any, index: number) => {
+
+    const activities = day.activities || [];
+
+    // Smart grouping: Check if time_of_day exists, otherwise auto-divide
+    const hasTimeOfDay = activities.some((a: any) => a.time_of_day);
+
+    let morning = [];
+    let afternoon = [];
+    let evening = [];
+
+    if (hasTimeOfDay) {
+      // Time of day provided by AI
+      morning = activities.filter(
+        (a: any) => a.time_of_day?.toLowerCase() === "morning"
+      );
+      afternoon = activities.filter(
+        (a: any) => a.time_of_day?.toLowerCase() === "afternoon"
+      );
+      evening = activities.filter(
+        (a: any) => a.time_of_day?.toLowerCase() === "evening"
+      );
+    } else {
+      // Auto-divide activities into thirds
+      const total = activities.length;
+      morning = activities.slice(0, Math.ceil(total / 3));
+      afternoon = activities.slice(
+        Math.ceil(total / 3),
+        Math.ceil((2 * total) / 3)
+      );
+      evening = activities.slice(Math.ceil((2 * total) / 3));
+    }
+
+    return (
+      <div key={index} className="space-y-6">
+
+        <h2 className="text-2xl font-bold">
+          Day {day.day || index + 1}
+        </h2>
+
+        {/* 🌅 MORNING */}
+        <div>
+          <h3 className="text-orange-500 font-semibold mb-3 text-lg">
+            🌅 Morning
+          </h3>
+          {morning.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {morning.map((activity: any, idx: number) => (
+                <ActivityCard key={idx} activity={activity} />
+              ))}
+            </div>
+          ) : (
+            <EmptyPlaceholder when="morning" />
+          )}
+        </div>
+
+        {/* ☀ AFTERNOON */}
+        <div>
+          <h3 className="text-yellow-500 font-semibold mb-3 text-lg">
+            ☀ Afternoon
+          </h3>
+          {afternoon.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {afternoon.map((activity: any, idx: number) => (
+                <ActivityCard key={idx} activity={activity} />
+              ))}
+            </div>
+          ) : (
+            <EmptyPlaceholder when="afternoon" />
+          )}
+        </div>
+
+        {/* 🌙 EVENING */}
+        <div>
+          <h3 className="text-purple-500 font-semibold mb-3 text-lg">
+            🌙 Evening
+          </h3>
+          {evening.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {evening.map((activity: any, idx: number) => (
+                <ActivityCard key={idx} activity={activity} />
+              ))}
+            </div>
+          ) : (
+            <EmptyPlaceholder when="evening" />
+          )}
+        </div>
+
+      </div>
+    );
+  })
+
+) : (
+  <p className="text-gray-400">No itinerary available</p>
+)}
+
     </div>
   );
-}
+};
 
-export default Itinerary
+export default Itinerary;
