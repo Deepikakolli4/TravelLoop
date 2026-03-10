@@ -1,5 +1,4 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -8,145 +7,193 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const QUESTION_KEYWORDS = {
+  DESTINATION: "Where would you like to travel?",
+  ORIGIN: "Where are you travelling from?",
+  TRIPTYPE: "What type of trip are you planning?",
+  BUDGET: "What is your budget for the trip?",
+  GROUP: "How many people are travelling?",
+  DURATION: "How many days will your trip be?",
+};
+
 export async function POST(req: Request) {
   try {
-
     const user = await currentUser();
 
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const usageCount = (user.publicMetadata?.tripCount as number) || 0;
+    const body = await req.json();
 
-    // ✅ FREE LIMIT
-    if (usageCount >= 10) {
+    console.log("[DEBUG] === NEW REQUEST RECEIVED ===");
+
+    const { messages = [] } = body;
+
+    if (!Array.isArray(messages)) {
       return NextResponse.json(
-        {
-          limitReached: true,
-          message: "Free limit finished. Please subscribe.",
-        },
-        { status: 403 }
+        { error: "messages must be an array" },
+        { status: 400 }
       );
     }
 
-    const { origin, destination, days, budget, travelWith } = await req.json();
+    const userMessages = messages.filter((m: any) => m?.role === "user");
+    const assistantMessages = messages.filter((m: any) => m?.role === "assistant");
 
-const prompt = `
-Create a ${days}-day travel plan for a trip.
+    console.log("[DEBUG] user messages count:", userMessages.length);
+    console.log("[DEBUG] assistant messages count:", assistantMessages.length);
+
+    let responseText = "";
+    let uiType: string | undefined = undefined;
+
+    /*
+    =====================================
+    CHAT FLOW CONTROL (FIXED)
+    =====================================
+    */
+
+    switch (userMessages.length) {
+      case 0:
+        console.log("[STEP 1] Asking DESTINATION");
+        responseText = QUESTION_KEYWORDS.DESTINATION;
+        break;
+
+      case 1:
+        console.log("[STEP 2] Asking ORIGIN");
+        responseText = QUESTION_KEYWORDS.ORIGIN;
+        break;
+
+      case 2:
+        console.log("[STEP 3] Asking TRIP TYPE");
+        responseText = QUESTION_KEYWORDS.TRIPTYPE;
+        uiType = "tripType";
+        break;
+
+      case 3:
+        console.log("[STEP 4] Asking BUDGET");
+        responseText = QUESTION_KEYWORDS.BUDGET;
+        uiType = "budget";
+        break;
+
+      case 4:
+        console.log("[STEP 5] Asking GROUP SIZE");
+        responseText = QUESTION_KEYWORDS.GROUP;
+        uiType = "groupSize";
+        break;
+
+      case 5:
+        console.log("[STEP 6] Asking TRIP DURATION");
+        responseText = QUESTION_KEYWORDS.DURATION;
+        uiType = "tripDuration";
+        break;
+
+      default:
+        console.log("[STEP 7] GENERATING ITINERARY");
+
+        const destination = userMessages[0]?.content?.trim() || "unknown";
+        const origin = userMessages[1]?.content?.trim() || "unknown";
+        const tripType = userMessages[2]?.content?.trim() || "Leisure";
+        const budget = userMessages[3]?.content?.trim() || "Moderate";
+        const group = userMessages[4]?.content?.trim() || "Couple";
+        const days = userMessages[5]?.content?.trim() || "5";
+
+        console.log("[DEBUG] Using answers:");
+        console.log("destination:", destination);
+        console.log("origin:", origin);
+        console.log("tripType:", tripType);
+        console.log("budget:", budget);
+        console.log("group:", group);
+        console.log("days:", days);
+
+        const prompt = `
+You are an expert travel planner.
+
+Create a detailed travel itinerary in JSON format.
 
 Trip Details:
-Origin: ${origin}
 Destination: ${destination}
-Days: ${days}
+Origin: ${origin}
+Trip Type: ${tripType}
 Budget: ${budget}
-Travel With: ${travelWith}
+Group Size: ${group}
+Trip Duration: ${days} days
 
-IMPORTANT:
-- Return ONLY valid JSON.
-- Do NOT include explanations.
-- Do NOT wrap in markdown.
-- Respect number of days strictly.
-- Always return EXACTLY 3 hotels.
-- Always return EXACTLY 3 famous local foods.
-- Generate real tourist attractions.
-- Do not repeat places.
-- Use real image URLs OR:
-  https://via.placeholder.com/400x300?text=Image
-
-Return JSON in this EXACT structure:
+Return ONLY JSON in this format:
 
 {
-  "destination": "${destination}",
-  "duration": "${days} Days",
-  "budget": "${budget}",
-  "hotels": [
-    {
-      "hotel_name": "",
-      "hotel_address": "",
-      "hotel_image_url": "",
-      "price_per_night": "",
-      "rating": ""
-    }
-  ],
-  "foods": [
-    {
-      "food_name": "",
-      "food_description": "",
-      "food_image_url": ""
-    }
-  ],
-  "itinerary": [
+  "destination": "",
+  "duration": "",
+  "budget": "",
+  "tripType": "",
+  "groupSize": "",
+  "dailyPlan": [
     {
       "day": 1,
-      "activities": [
-        {
-          "time_of_day": "morning",
-          "place_name": "",
-          "place_address": "",
-          "place_details": "",
-          "place_image_url": "",
-          "ticket_pricing": ""
-        },
-        {
-          "time_of_day": "afternoon",
-          "place_name": "",
-          "place_address": "",
-          "place_details": "",
-          "place_image_url": "",
-          "ticket_pricing": ""
-        },
-        {
-          "time_of_day": "evening",
-          "place_name": "",
-          "place_address": "",
-          "place_details": "",
-          "place_image_url": "",
-          "ticket_pricing": ""
-        }
-      ]
+      "morning": "",
+      "afternoon": "",
+      "evening": "",
+      "stay": "",
+      "restaurant": ""
     }
   ]
 }
 `;
-    const response = await openai.chat.completions.create({
-      model: "openai/gpt-4o-mini",
-      messages: [
-        { role: "system", content: "Return ONLY JSON." },
-        { role: "user", content: prompt },
-      ],
-    });
 
-    let text = response.choices[0].message.content || "{}";
-    text = text.replace(/```json|```/g, "").trim();
+        const aiResponse = await openai.chat.completions.create({
+          model: "deepseek/deepseek-chat",
+          messages: [
+            {
+              role: "system",
+              content: "Return ONLY valid JSON. No explanation.",
+            },
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          temperature: 0.35,
+          max_tokens: 4500,
+        });
 
-    let trip_plan;
+        let text = aiResponse.choices?.[0]?.message?.content?.trim() || "{}";
 
-    try {
-      trip_plan = JSON.parse(text);
-    } catch {
-      trip_plan = {};
+        let trip_plan = {};
+
+        try {
+          const cleaned = text
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+
+          trip_plan = JSON.parse(cleaned);
+        } catch (e) {
+          console.error("[ERROR] JSON parsing failed:", e);
+
+          trip_plan = {
+            error: "Invalid JSON from AI",
+            raw: text,
+          };
+        }
+
+        return NextResponse.json({
+          resp: "Your travel itinerary is ready!",
+          ui: "final",
+          trip_plan,
+        });
     }
 
-
-const client = await clerkClient();
-
-await client.users.updateUser(user.id, {
-  publicMetadata: {
-    tripCount: usageCount + 1,
-  },
-});
+    console.log("[RESPONSE] Sending question:", responseText);
 
     return NextResponse.json({
-      trip_plan,
-      remainingUses: 10 - (usageCount + 1),
+      resp: responseText,
+      ui: uiType,
     });
 
   } catch (error) {
-    console.error("ERROR:", error);
+    console.error("[CRITICAL] API route crashed:", error);
 
     return NextResponse.json(
-      { error: "Something went wrong" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
