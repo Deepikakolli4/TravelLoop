@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0EA5E9"/>
+      <stop offset="1" stop-color="#22C55E"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <path d="M80 620L250 460L380 560L560 390L720 540L910 380L1120 620V800H80V620Z" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="980" cy="150" r="58" fill="rgba(255,255,255,0.3)"/>
+  <text x="100" y="150" fill="white" font-family="Arial, sans-serif" font-size="58" font-weight="700">Travel Loop</text>
+  <text x="100" y="220" fill="white" font-family="Arial, sans-serif" font-size="34">Image unavailable</text>
+</svg>

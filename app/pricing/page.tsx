@@ -11,7 +11,7 @@ const Pricing = () => {
 
         {/* Heading */}
         <h1 className="text-2xl md:text-5xl font-extrabold text-gray-800 mb-2">
-          Choose Your {" "}<span className="text-primary">Perfect Plan</span>{" "}
+          Choose Your {" "}<span className="text-purple-700">Perfect Plan</span>{" "}
         </h1>
 
         <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-12">

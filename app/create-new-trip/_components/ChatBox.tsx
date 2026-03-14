@@ -13,55 +13,14 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useUserDetail } from "@/app/provider";
 import { v4 as uuidv4 } from "uuid";
+import { useTripDetail } from "@/app/provider";
+import { TripInfo } from "./types";
 
 type Message = {
   role: string;
   content: string;
   ui?: string;
-};
-
-export type TripInfo = {
-  destination: string;
-  duration: string;
-  origin: string;
-  budget: string;
-  group_size: string;
-  hotels: Hotel[];
-  itinerary: Itinerary;
-};
-
-export type Hotel = {
-  hotel_name: string;
-  hotel_address: string;
-  price_per_night: string;
-  hotel_image_url: string;
-  geo_coordinates: {
-    latitude: number;
-    longitude: number;
-  };
-  rating: number;
-  description: string;
-};
-
-export type Activity = {
-  place_name: string;
-  place_details: string;
-  place_image_url: string;
-  geo_coordinates: {
-    latitude: number;
-    longitude: number;
-  };
-  place_address: string;
-  ticket_pricing: string;
-  time_travel_each_location: string;
-  best_time_to_visit: string;
-};
-
-export type Itinerary = {
-  day: number;
-  day_plan: string;
-  best_time_to_visit_day: string;
-  activities: Activity[];
+  data?: any;
 };
 
 const ChatBox = () => {
@@ -71,8 +30,38 @@ const ChatBox = () => {
   const [isFinal, setIsFinal] = useState(false);
   const [tripDetail, setTripDetail] = useState<TripInfo>();
 
-  const SaveTripDetail = useMutation(api.tripDetail.CreateTripDetail);
+  const SaveTripEvent = useMutation(api.tripDetail.CreateTripEvent);
   const { userDetail } = useUserDetail();
+  const { setTripDetailInfo } = useTripDetail();
+
+  const handleViewTrip = () => {
+    if (!tripDetail?.tripId) {
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent("travelloop:view-trip-map", {
+        detail: { tripId: tripDetail.tripId },
+      })
+    );
+
+    SaveTripEvent({
+      tripId: tripDetail.tripId,
+      uid: userDetail?._id,
+      eventType: "save",
+      entityType: "trip",
+      entityName: tripDetail.destination,
+      score: tripDetail.mlInsights?.feasibility?.score,
+      metadata: {
+        intent: tripDetail.mlInsights?.intent?.label,
+      },
+    }).catch((error) => {
+      console.error("Failed to log save event", error);
+    });
+
+    const itineraryEl = document.getElementById("itinerary-section");
+    itineraryEl?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const onSend = async (input?: string) => {
     const contentToSend = input ?? userInput ?? "";
@@ -92,36 +81,61 @@ const ChatBox = () => {
       setMessages(updatedMessages);
     }
 
-    const result = await axios.post("/api/aimodel", {
-      messages: updatedMessages,
-      isFinal: isFinal,
-    });
-
-    const data = result.data;
-
-    if (data?.resp) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: data.resp,
-          ui: data.ui,
-        },
-      ]);
-    }
-
-    if (data?.trip_plan && !tripDetail) {
-      setTripDetail(data.trip_plan);
-      const tripId = uuidv4();
-
-      await SaveTripDetail({
-        tripDetail: data.trip_plan,
-        tripId,
-        uid: userDetail?._id,
+    try {
+      const result = await axios.post("/api/aimodel", {
+        messages: updatedMessages,
+        isFinal: isFinal,
       });
-    }
 
-    setLoading(false);
+      const data = result.data;
+
+      if (data?.resp) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: data.resp,
+            ui: data.ui,
+            data: data.uiData,
+          },
+        ]);
+      }
+
+      if (data?.trip_plan) {
+        const isNewTrip = !tripDetail;
+        const resolvedTripId = tripDetail?.tripId ?? uuidv4();
+
+        const newTrip: TripInfo = {
+          ...(data.trip_plan as TripInfo),
+          tripId: resolvedTripId,
+        };
+
+        setTripDetail(newTrip);
+        setTripDetailInfo(newTrip);
+
+        if (isNewTrip && userDetail?._id) {
+          await SaveTripEvent({
+            tripId: resolvedTripId,
+            uid: userDetail._id,
+            eventType: "plan_generated",
+            entityType: "trip",
+            entityName: newTrip.destination,
+            score: newTrip.mlInsights?.feasibility?.score,
+            metadata: {
+              intent: newTrip.mlInsights?.intent?.label,
+              budgetBand: newTrip.budget,
+              duration: newTrip.duration,
+              hotelsCount: newTrip.hotels?.length ?? 0,
+              daysCount: newTrip.itinerary?.length ?? 0,
+            },
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch AI response", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   /*
@@ -133,7 +147,7 @@ const ChatBox = () => {
     }
   }, []);
 
-  const RenderGenerativeUi = (ui: string) => {
+  const RenderGenerativeUi = (ui: string, data?: any) => {
     if (ui === "budget") {
       return <BudgetUI onSelectedOption={(v: string) => onSend(v)} />;
     }
@@ -149,7 +163,7 @@ const ChatBox = () => {
     if (ui === "final") {
       return (
         <FinalUI
-          viewTrip={() => console.log("View Trip Clicked")}
+          viewTrip={handleViewTrip}
           disable={!tripDetail}
         />
       );
@@ -185,7 +199,7 @@ const ChatBox = () => {
             <div className="flex justify-start mt-2" key={index}>
               <div className="max-w-lg bg-gray-100 text-black px-4 py-2 rounded-lg">
                 {msg.content}
-                {RenderGenerativeUi(msg.ui ?? "")}
+                {RenderGenerativeUi(msg.ui ?? "", msg.data)}
               </div>
             </div>
           )

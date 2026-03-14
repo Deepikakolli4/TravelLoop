@@ -31,7 +31,7 @@ export default function ContactPage() {
     <div className="min-h-screen py-14">
       <div className="max-w-6xl mx-auto px-6">
          <h1 className="text-2xl md:text-5xl font-extrabold text-center text-gray-800 mb-10">
-          Get in Touch with {" "}<span className="text-primary">Travel Loop</span>{" "}
+          Get in Touch with {" "}<span className="text-purple-700">Travel Loop</span>{" "}
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Contact Info */}

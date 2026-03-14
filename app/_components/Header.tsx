@@ -8,9 +8,12 @@ import { usePathname } from 'next/navigation'
 
 const menuOptions = [
   { name: 'Home', path: '/' },
+  { name: 'My Trips', path: '/my-trips' },
   { name: 'Pricing', path: '/pricing' },
+  { name: 'Booking', path: '/booking' },
+  { name: 'Explore', path: '/blogs' },
+  { name: 'Analytics', path: '/internal-analytics' },
   { name: 'Contact us', path: '/contact-us' },
-  { name: 'Booking', path: '/booking' }
 ]
 
 const Header = () => {
@@ -46,7 +49,7 @@ const Header = () => {
 
                 {/* Active underline */}
                 {isActive && (
-                  <span className="h-[2px] w-full bg-purple-700 mt-1"></span>
+                  <span className="h-0.5 w-full bg-purple-700 mt-1"></span>
                 )}
 
               </div>
