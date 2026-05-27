@@ -1,36 +1,168 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Travel Loop 🌍✈️
+================
 
-## Getting Started
+### AI-Powered Personalized Travel Planning Platform
 
-First, run the development server:
+Travel Loop is an intelligent travel management platform designed to simplify and personalize trip planning. The application generates customized travel itineraries based on user preferences such as destination, budget, group size, duration, and travel goals.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Built using modern full-stack technologies, Travel Loop integrates AI-powered recommendations, interactive maps, secure authentication, and real-time trip management to deliver a seamless travel planning experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🚀 Features
+-----------
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+*   🔐 Secure Authentication using Clerk & JWT
+    
+*   🤖 AI-powered itinerary generation using GPT/Gemini APIs
+    
+*   🗺️ Interactive route visualization with Google Maps / Mapbox
+    
+*   📍 Personalized travel recommendations
+    
+*   💳 Subscription & usage limit management using Arcjet & Stripe
+    
+*   📦 Centralized trip storage and management
+    
+*   ⚡ Real-time itinerary updates
+    
+*   📱 Responsive and modern UI
+    
+*   🧭 Dynamic trip planning based on:
+    
+    *   Budget
+        
+    *   Group size
+        
+    *   Destination
+        
+    *   Preferences
+        
+    *   Duration
+        
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🛠️ Tech Stack
+--------------
 
-## Learn More
+### Frontend
 
-To learn more about Next.js, take a look at the following resources:
+*   Next.js
+    
+*   React.js
+    
+*   TypeScript
+    
+*   Tailwind CSS
+    
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Backend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+*   Node.js
+    
+*   Express.js
+    
+*   Convex
+    
 
-## Deploy on Vercel
+### Database
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+*   Convex DB / MongoDB
+    
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### APIs & Services
+
+*   GPT / Gemini APIs
+    
+*   Google Maps API / Mapbox
+    
+*   Clerk Authentication
+    
+*   Arcjet Rate Limiting
+    
+*   Stripe Payment Gateway
+    
+
+📂 Project Structure
+--------------------
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   TravelLoop/  │── frontend/  │   ├── components/  │   ├── pages/  │   ├── hooks/  │   ├── services/  │   └── styles/  │  │── backend/  │   ├── controllers/  │   ├── routes/  │   ├── middleware/  │   ├── services/  │   └── utils/  │  │── database/  │── public/  │── README.md   `
+
+⚙️ Installation & Setup
+-----------------------
+
+### 1️⃣ Clone the Repository
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   git clone https://github.com/Deepikakolli4/TravelLoop.git  cd TravelLoop   `
+
+### 2️⃣ Install Dependencies
+
+#### Frontend
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   cd frontend  npm install   `
+
+#### Backend
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   cd backend  npm install   `
+
+🔑 Environment Variables
+------------------------
+
+Create a .env file in the root directory and add the following:
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=  CLERK_SECRET_KEY=  GEMINI_API_KEY=  OPENAI_API_KEY=  MONGODB_URI=  CONVEX_DEPLOYMENT=  STRIPE_SECRET_KEY=  MAPBOX_API_KEY=  GOOGLE_MAPS_API_KEY=   `
+
+▶️ Run the Application
+----------------------
+
+### Start Frontend
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm run dev   `
+
+### Start Backend
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm start   `
+
+📌 Core Modules
+---------------
+
+*   User Authentication Module
+    
+*   AI Recommendation Engine
+    
+*   Trip Planning Module
+    
+*   Map & Route Visualization
+    
+*   Subscription & Usage Management
+    
+*   Trip Storage & Retrieval
+    
+
+🔮 Future Enhancements
+----------------------
+
+*   Real-time weather integration
+    
+*   Hotel & flight booking support
+    
+*   AI chatbot travel assistant
+    
+*   Collaborative group trip planning
+    
+*   Multi-language support
+    
+
+👩‍💻 Contributors
+------------------
+
+*   Deepika Kolli
+    
+*   Chintada Sujana Priya
+    
+*   Madhumitha Potharaju
+    
+*   Kotana Bindu Madhuri
+    
+
+📄 License
+----------
+
+This project is developed for academic and learning purposes.
